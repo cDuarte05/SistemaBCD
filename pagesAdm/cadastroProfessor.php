@@ -1,5 +1,5 @@
 <?php
-include 'conexao.php';
+include "../conexao.php";
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $nome = $_POST['nome'];
@@ -33,5 +33,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         Contato: <input type="text" name="contato"><br><br>
         <button type="submit">Salvar</button>
     </form>
+    <a href="../dashbord_adm.html">Voltar para o menu</a>
 </body>
 </html>

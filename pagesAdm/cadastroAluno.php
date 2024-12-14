@@ -1,5 +1,5 @@
 <?php
-include 'conexao.php';
+include "../conexao.php";
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $nome = $_POST['nome'];
@@ -58,6 +58,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } else {
         echo "Erro no upload do arquivo.";
     }
+    
+    mysqli_close($conexao);
 }
 ?>
 
@@ -103,6 +105,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         Observações Médicas: <textarea name="observacoes_medicas"></textarea><br><br>
         <button type="submit">Salvar</button>
     </form>
+    <a href="../dashbord_adm.html">Voltar para o menu</a>
 </body>
 
 </html>

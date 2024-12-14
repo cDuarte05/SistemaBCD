@@ -1,5 +1,5 @@
 <?php
-include 'conexao.php';
+include "../conexao.php";
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $nome = $_POST['nome'];
@@ -11,7 +11,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $sql = "INSERT INTO turmas (nome, sexo, professor_id, horario, capacidade) 
             VALUES ('$nome', '$sexo', $professor_id, '$horario', $capacidade)";
 
-    if ($conn->query($sql) === TRUE) {
+    if (mysqli_query($conexao,$SQL) === TRUE) {
         echo "Turma cadastrada com sucesso!";
     } else {
         echo "Erro ao cadastrar turma: " . mysqli_error($conexao);
@@ -48,5 +48,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         Capacidade: <input type="number" name="capacidade" min="1" max="8"><br>
         <button type="submit">Salvar</button>
     </form>
+    <a href="../dashbord_adm.html">Voltar para o menu</a>
 </body>
 </html>
