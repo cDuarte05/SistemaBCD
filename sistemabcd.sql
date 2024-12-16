@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 13, 2024 at 04:54 AM
--- Server version: 10.4.32-MariaDB
--- PHP Version: 8.2.12
+-- Tempo de geração: 16/12/2024 às 03:47
+-- Versão do servidor: 10.4.32-MariaDB
+-- Versão do PHP: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -18,207 +18,58 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `sistemabcd`
+-- Banco de dados: `sistemabcd`
 --
+CREATE DATABASE IF NOT EXISTS `sistemabcd` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+USE `sistemabcd`;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `alunos`
+-- Estrutura para tabela `alunos`
 --
-
-CREATE TABLE `alunos` (
-  `id` int(11) NOT NULL,
-  `nome` varchar(100) NOT NULL,
-  `sexo` enum('M','F') NOT NULL,
-  `data_nascimento` date NOT NULL,
-  `contato` varchar(100) DEFAULT NULL,
-  `turma_id` int(11) DEFAULT NULL,
-  `declaracao_medica` varchar(255) DEFAULT NULL,
-  `observacoes_medicas` text DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+-- Erro ao ler a estrutura para a tabela sistemabcd.alunos: #1932 - Table &#039;sistemabcd.alunos&#039; doesn&#039;t exist in engine
+-- Erro ao ler dados para tabela sistemabcd.alunos: #1064 - Você tem um erro de sintaxe no seu SQL próximo a &#039;FROM `sistemabcd`.`alunos`&#039; na linha 1
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `frequencias`
+-- Estrutura para tabela `frequencias`
 --
-
-CREATE TABLE `frequencias` (
-  `id` int(11) NOT NULL,
-  `aluno_id` int(11) NOT NULL,
-  `data` date NOT NULL,
-  `status` enum('presente','ausente') NOT NULL,
-  `observacoes` text DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+-- Erro ao ler a estrutura para a tabela sistemabcd.frequencias: #1932 - Table &#039;sistemabcd.frequencias&#039; doesn&#039;t exist in engine
+-- Erro ao ler dados para tabela sistemabcd.frequencias: #1064 - Você tem um erro de sintaxe no seu SQL próximo a &#039;FROM `sistemabcd`.`frequencias`&#039; na linha 1
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `mensalidades`
+-- Estrutura para tabela `mensalidades`
 --
-
-CREATE TABLE `mensalidades` (
-  `id` int(11) NOT NULL,
-  `aluno_id` int(11) NOT NULL,
-  `valor` decimal(10,2) NOT NULL,
-  `data_vencimento` date NOT NULL,
-  `status` enum('pago','pendente') DEFAULT 'pendente'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+-- Erro ao ler a estrutura para a tabela sistemabcd.mensalidades: #1932 - Table &#039;sistemabcd.mensalidades&#039; doesn&#039;t exist in engine
+-- Erro ao ler dados para tabela sistemabcd.mensalidades: #1064 - Você tem um erro de sintaxe no seu SQL próximo a &#039;FROM `sistemabcd`.`mensalidades`&#039; na linha 1
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `professores`
+-- Estrutura para tabela `professores`
 --
-
-CREATE TABLE `professores` (
-  `id` int(11) NOT NULL,
-  `nome` varchar(100) NOT NULL,
-  `especialidade` varchar(100) DEFAULT NULL,
-  `contato` varchar(100) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+-- Erro ao ler a estrutura para a tabela sistemabcd.professores: #1932 - Table &#039;sistemabcd.professores&#039; doesn&#039;t exist in engine
+-- Erro ao ler dados para tabela sistemabcd.professores: #1064 - Você tem um erro de sintaxe no seu SQL próximo a &#039;FROM `sistemabcd`.`professores`&#039; na linha 1
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `turmas`
+-- Estrutura para tabela `turmas`
 --
-
-CREATE TABLE `turmas` (
-  `id` int(11) NOT NULL,
-  `nome` varchar(100) NOT NULL,
-  `sexo` enum('M','F') NOT NULL,
-  `professor_id` int(11) DEFAULT NULL,
-  `horario` varchar(50) DEFAULT NULL,
-  `capacidade` int(11) DEFAULT 8
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+-- Erro ao ler a estrutura para a tabela sistemabcd.turmas: #1932 - Table &#039;sistemabcd.turmas&#039; doesn&#039;t exist in engine
+-- Erro ao ler dados para tabela sistemabcd.turmas: #1064 - Você tem um erro de sintaxe no seu SQL próximo a &#039;FROM `sistemabcd`.`turmas`&#039; na linha 1
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `usuarios`
+-- Estrutura para tabela `usuarios`
 --
-
-CREATE TABLE `usuarios` (
-  `id` int(11) NOT NULL,
-  `nome` varchar(100) NOT NULL,
-  `email` varchar(100) NOT NULL,
-  `senha` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Indexes for dumped tables
---
-
---
--- Indexes for table `alunos`
---
-ALTER TABLE `alunos`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `turma_id` (`turma_id`);
-
---
--- Indexes for table `frequencias`
---
-ALTER TABLE `frequencias`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `aluno_id` (`aluno_id`);
-
---
--- Indexes for table `mensalidades`
---
-ALTER TABLE `mensalidades`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `aluno_id` (`aluno_id`);
-
---
--- Indexes for table `professores`
---
-ALTER TABLE `professores`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `turmas`
---
-ALTER TABLE `turmas`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `professor_id` (`professor_id`);
-
---
--- Indexes for table `usuarios`
---
-ALTER TABLE `usuarios`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `email` (`email`);
-
---
--- AUTO_INCREMENT for dumped tables
---
-
---
--- AUTO_INCREMENT for table `alunos`
---
-ALTER TABLE `alunos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `frequencias`
---
-ALTER TABLE `frequencias`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `mensalidades`
---
-ALTER TABLE `mensalidades`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `professores`
---
-ALTER TABLE `professores`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `turmas`
---
-ALTER TABLE `turmas`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `usuarios`
---
-ALTER TABLE `usuarios`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- Constraints for dumped tables
---
-
---
--- Constraints for table `alunos`
---
-ALTER TABLE `alunos`
-  ADD CONSTRAINT `alunos_ibfk_1` FOREIGN KEY (`turma_id`) REFERENCES `turmas` (`id`) ON DELETE SET NULL;
-
---
--- Constraints for table `frequencias`
---
-ALTER TABLE `frequencias`
-  ADD CONSTRAINT `frequencias_ibfk_1` FOREIGN KEY (`aluno_id`) REFERENCES `alunos` (`id`) ON DELETE CASCADE;
-
---
--- Constraints for table `mensalidades`
---
-ALTER TABLE `mensalidades`
-  ADD CONSTRAINT `mensalidades_ibfk_1` FOREIGN KEY (`aluno_id`) REFERENCES `alunos` (`id`) ON DELETE CASCADE;
-
---
--- Constraints for table `turmas`
---
-ALTER TABLE `turmas`
-  ADD CONSTRAINT `turmas_ibfk_1` FOREIGN KEY (`professor_id`) REFERENCES `professores` (`id`) ON DELETE SET NULL;
+-- Erro ao ler a estrutura para a tabela sistemabcd.usuarios: #1932 - Table &#039;sistemabcd.usuarios&#039; doesn&#039;t exist in engine
+-- Erro ao ler dados para tabela sistemabcd.usuarios: #1064 - Você tem um erro de sintaxe no seu SQL próximo a &#039;FROM `sistemabcd`.`usuarios`&#039; na linha 1
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
