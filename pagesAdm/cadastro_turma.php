@@ -1,23 +1,5 @@
 <?php
-include "../conexao.php";
-
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $nome = $_POST['nome'];
-    $sexo = $_POST['sexo'];
-    $professor_id = $_POST['professor_id'];
-    $horario = $_POST['horario'];
-    $capacidade = $_POST['capacidade'];
-
-    $sql = "INSERT INTO turmas (nome, sexo, professor_id, horario, capacidade) 
-            VALUES ('$nome', '$sexo', $professor_id, '$horario', $capacidade)";
-
-    if (mysqli_query($conexao,$SQL) === TRUE) {
-        echo "Turma cadastrada com sucesso!";
-    } else {
-        echo "Erro ao cadastrar turma: " . mysqli_error($conexao);
-    }
-    mysqli_close($conexao);
-}
+    include "../conexao.php";
 ?>
 
 <!DOCTYPE html>
@@ -48,6 +30,27 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         Capacidade: <input type="number" name="capacidade" min="1" max="8"><br>
         <button type="submit">Salvar</button>
     </form>
-    <a href="../dashbord_adm.html">Voltar para o menu</a>
+    <a href="../dashbord_adm.php">Voltar para o menu</a><br>
 </body>
 </html>
+
+<?php
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $nome = $_POST['nome'];
+    $sexo = $_POST['sexo'];
+    $professor_id = $_POST['professor_id'];
+    $horario = $_POST['horario'];
+    $capacidade = $_POST['capacidade'];
+
+    $sql = "INSERT INTO turmas (nome, sexo, professor_id, horario, capacidade) 
+            VALUES ('$nome', '$sexo', $professor_id, '$horario', $capacidade)";
+
+    if (mysqli_query($conexao,$sql) === TRUE) {
+        echo "Turma cadastrada com sucesso!";
+    } else {
+        echo "Erro ao cadastrar turma: " . mysqli_error($conexao);
+    }
+    mysqli_close($conexao);
+}
+?>

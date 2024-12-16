@@ -5,45 +5,69 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Relatórios</title>
+    <style>
+        table,td,tr,th {
+            border: 1px black solid;
+        }
+        td,th {
+            padding: 5px;
+        }
+    </style>
 </head>
 
 <body>
     <h3>Gerador de relatórios</h3>
     <form action="" method="POST" name="opcRelatorio">
-        <select name="relatorios" id="">
-            <option value=""></option>
+        <select name="relatorios" >
+            <option value="0"></option>
             <option value="1">Relação de alunos por turma</option>
             <option value="2">Todos os alunos ordenando por nome</option>
             <option value="3">Relação de aniversários por mês</option>
             <option value="4">Relação de alunos com mensalidades atrasadas</option>
             <option value="5">Relação de alunos e porcentagem de presença</option>
         </select>
-        <input type="submit" value="Montar">
+        <input type="submit" value="Montar"><br>
+        <select name="turma">
+            <?php
+                include "../conexao.php";
+                $SQL = "SELECT id, nome FROM turmas";
+                $result = mysqli_query($conexao, $SQL);
+    
+                if (mysqli_num_rows($result) > 0) { // Verifica se a consulta foi bem-sucedida
+                    $number = mysqli_num_rows($result);
+                    for ($i = 0; $i < $number; $i++) {
+                        $row = mysqli_fetch_row($result);
+                        echo "<option value='$row[0]'>". $row[1]. "</option>";
+                    }
+                } else {
+                    echo "Erro ao buscar turmas: " . mysqli_error($conexao);
+                }
+            ?>
+        </select> - Só incluencia na relação de alunos por turma (Primeira opção)
     </form>
-</body>
-
-</html>
 
 <?php 
 //obs: As chaves usadas para associar os vetores servem como interpolação
 //obs 2: Detalhe importante, colocar comentários nos codigos sql faz ele quebrar
-include "../conexao.php";
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+if (isset($_POST['relatorios']) && $_POST['relatorios'] != 0) {
     if (isset($_POST['relatorios']) && !empty($_POST['relatorios'])) { //confere se foi definida e se é diferente de vazio
         $escolha = $_POST["relatorios"];
         switch ($escolha) {
             case "1": //relação de alunos por turma
-                $SQL = "SELECT turmas.nome as Turma, alunos.nome as Alunos 
-                        FROM alunos INNER JOIN turmas on alunos.turma_id = turmas.id
-                        ORDER BY turma,alunos";
+                $turma = $_POST['turma'];
+                $SQL = "SELECT turmas.nome AS 'Turma', alunos.nome AS 'Alunos' 
+                FROM alunos 
+                INNER JOIN turmas ON alunos.turma_id = turmas.id
+                WHERE turmas.id = $turma 
+                ORDER BY Turma,Alunos";
                 $resultado = mysqli_query($conexao, $SQL);
                 if(mysqli_num_rows($resultado) > 0){    
                     echo "<h3>Relação de alunos por turma: </h3>";
-                    echo "<ul>";
+                    echo "<table><tr><th>Turma</th><th>Aluno</th>";
                     while ($row = mysqli_fetch_assoc($resultado)) {
-                        echo "<li>Turma: {$row['turma']} - Aluno: {$row['aluno']}</li>";
+                        echo "<tr><td>{$row['Turma']}</td><td>{$row['Alunos']}</td></tr>";
                     }
-                    echo "</ul>";
+                    echo "</table>";
                 }else{
                     echo "Não há alunos registrados";   
                 }   
@@ -57,19 +81,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     alunos.sexo, 
                     alunos.data_nascimento, 
                     alunos.contato, 
-                    alunos.observacoes_medicas, 
-                    turmas.nome AS turma,
-                    arquivos.caminho as arquivos
+                    alunos.observacoes_medicas,
+                    alunos.declaracao_medica, 
+                    turmas.nome AS turma
                 FROM 
                     alunos 
                 LEFT JOIN 
                     turmas ON alunos.turma_id = turmas.id
-                LEFT JOIN 
-                arquivos ON alunos.id = arquivos.aluno_id";
+                ORDER BY 
+                    alunos.nome; ";
                 $resultado = mysqli_query($conexao, $SQL);
                 // Verifica se há resultados
                if (mysqli_num_rows($resultado) > 0) {
-                echo "<table border='1' cellspacing='0' cellpadding='5'>";
+                echo "<h3>Todos os alunos: </h3>";
+                echo "<table>";
                 echo "<tr> 
                     <th>ID</th> 
                     <th>Nome</th> 
@@ -78,7 +103,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     <th>Contato</th> 
                     <th>Observações Médicas</th> 
                     <th>Turma</th>
-                    <th>Arquivo</th>
+                    <th>Arquivo Médico</th>
                     </tr>";
     // Loop para exibir os dados na tabela
                     while ($row = mysqli_fetch_assoc($resultado)) {
@@ -92,14 +117,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         echo "<td>{$row['turma']}</td>";
 
                         // Verifica se há um arquivo associado
-                        if (!empty($row['caminho'])) {
+                        if (!empty($row['declaracao_medica'])) {
                             // Link para download
-                            echo "<td><a href='{$row['caminho']}' download>Baixar Arquivo</a></td>";
+                            echo "<td><a href='../arquivos/{$row['declaracao_medica']}'download>Baixar Arquivo</a></td>";
                         } else {
                             echo "<td>Sem arquivo</td>";
                         }
                             
-                        echo "</tr>";
+                        echo "</tr>"; 
                 }
                 echo "</table>";
             } else {
@@ -138,37 +163,38 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 }
             break;
             case "4": //relação de alunos e mensalidades atrasadas
-                $SQL = "SELECT alunos.nome, mensalidades.valor, mensalidades.data_vencimento 
-                        FROM alunos 
-                        INNER JOIN mensalidades ON alunos.id = mensalidades.aluno_id 
-                        WHERE mensalidades.status = '%pendente%' AND mensalidades.data_vencimento < CURDATE() 
-                        ORDER BY mensalidades.data_vencimento";
+                $SQL = "SELECT alunos.nome, alunos.id as 'ID', mensalidades.id, mensalidades.valor, mensalidades.data_vencimento FROM mensalidades
+                        INNER JOIN alunos ON aluno_id = alunos.id
+                        WHERE STATUS = 'pendente' AND mensalidades.data_vencimento < CURRENT_DATE";
                 $resultado = mysqli_query($conexao, $SQL);
                 if(mysqli_num_rows($resultado) > 0){
                     echo "<h3>Relação de alunos com mensalidades atrasadas</h3>";
-                    echo "<ul>";
+                    echo "<table>
+                        <tr><th>Aluno</th> <th>ID</th> <th>Valor</th> <th>Vencimento</th></tr>";
                     while($row = mysqli_fetch_assoc($resultado)){
-                        echo "<li>Aluno: {$row['nome']} - Valor: {$row['valor']} - Vencimento: {$row['data_vencimento']}</li>";
+                        echo "<tr><td>{$row['nome']}</td> <td>{$row['ID']}</td> <td>R$ {$row['valor']}</td> <td>{$row['data_vencimento']}</td></tr>";
                     }
-                    echo"</ul>";
+                    echo"</table>";
                 }else echo "Não há alunos com mensalidade atrasada";   
             break;
             case "5": //relaçao de alunos e porcentagem de presença
-                //--loucura pra conseguir esse negocio
-                $SQL = "SELECT alunos.nome, 
-                (COUNT(frequencias.id) / (SELECT COUNT(*) FROM turmas WHERE id = alunos.turma_id)) * 100 AS porcentagem 
-                FROM alunos 
-                LEFT JOIN frequencias ON alunos.id = frequencias.aluno_id 
-                GROUP BY alunos.id 
-                ORDER BY porcentagem ASC";
+                //--loucura pra conseguir esse negocio -> concordo, até pra fazer esse outro aqui foi loucura
+                $SQL = "SELECT alunos.nome,alunos.id,
+                100 - 
+                ((select count(*) from frequencias where aluno_id = alunos.id and status = 'ausente') / 
+                (select count(*) from frequencias where aluno_id = alunos.id) * 100) as 'Frequencia' 
+                from frequencias inner join alunos on aluno_id = alunos.id 
+                group by alunos.nome
+                order by Frequencia";
                 $resultado = mysqli_query($conexao, $SQL);
                 if(mysqli_num_rows($resultado) > 0){
                     echo "<h3>Relação de alunos e porcentagem de presença</h3>";
-                    echo "<ul>";
+                    echo "<table>";
+                    echo "<tr><th>ID</th> <th>Nome</th> <th>Presença</th>";
                     while ($row = mysqli_fetch_assoc($resultado)){
-                        echo "ID: " . $row['id'] . " - Nome: " . $row['nome'] . " - Porcentagem de Presença: " . $row['porcentagem'] . "%<br>";
+                        echo "<tr><td>" . $row['id'] . "</td><td>" . $row['nome'] . "</td><td>" . $row['Frequencia'] . "%</td></tr>";
                     }
-                    echo "</ul>";
+                    echo "</table>";
                 }else echo "Não há alunos registrados";
                 break;
             default:
@@ -176,20 +202,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 break;
         }
         mysqli_close(mysql: $conexao);
-    }else echo "váriavel não definada ou vazia";
-}else{
-    echo "ERRO AO ENVIAR FORMULARIO";
+    } else echo "váriavel não definada ou vazia";
+} else {
+    echo "Escolha uma das opções de relatórios.";
 }
 ?>
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    <br><a href="../dashbord_adm.html">Voltar para o menu</a>
+    <br><a href="../dashbord_adm.php">Voltar para o menu</a>
 </body>
 </html>
