@@ -78,9 +78,11 @@ if (isset($_SESSION['usuario']) && isset($_SESSION['senha'])) {
                     echo "</table>";
                 } else {
                     echo "Nenhum aluno/turma registrado para esse professor.<br>";
+                    echo "<br><a href='../dashbord_prof.php'>Voltar ao menu</a>";
                 }
             } else {
                 echo "Nenhum aluno/turma registrado para esse professor.<br>";
+                echo "<br><a href='../dashbord_prof.php'>Voltar ao menu</a>";
             }
         ?>
             <br><form action="justificarAusencia.php" method="POST">
