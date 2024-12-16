@@ -163,19 +163,18 @@ if (isset($_POST['relatorios']) && $_POST['relatorios'] != 0) {
                 }
             break;
             case "4": //relação de alunos e mensalidades atrasadas
-                $SQL = "SELECT alunos.nome, mensalidades.valor, mensalidades.data_vencimento 
-                        FROM alunos 
-                        INNER JOIN mensalidades ON alunos.id = mensalidades.aluno_id 
-                        WHERE mensalidades.status = '%pendente%' AND mensalidades.data_vencimento < CURDATE() 
-                        ORDER BY mensalidades.data_vencimento";
+                $SQL = "SELECT alunos.nome, alunos.id as 'ID', mensalidades.id, mensalidades.valor, mensalidades.data_vencimento FROM mensalidades
+                        INNER JOIN alunos ON aluno_id = alunos.id
+                        WHERE STATUS = 'pendente' AND mensalidades.data_vencimento < CURRENT_DATE";
                 $resultado = mysqli_query($conexao, $SQL);
                 if(mysqli_num_rows($resultado) > 0){
                     echo "<h3>Relação de alunos com mensalidades atrasadas</h3>";
-                    echo "<ul>";
+                    echo "<table>
+                        <tr><th>Aluno</th> <th>ID</th> <th>Valor</th> <th>Vencimento</th></tr>";
                     while($row = mysqli_fetch_assoc($resultado)){
-                        echo "<li>Aluno: {$row['nome']} - Valor: {$row['valor']} - Vencimento: {$row['data_vencimento']}</li>";
+                        echo "<tr><td>{$row['nome']}</td> <td>{$row['ID']}</td> <td>R$ {$row['valor']}</td> <td>{$row['data_vencimento']}</td></tr>";
                     }
-                    echo"</ul>";
+                    echo"</table>";
                 }else echo "Não há alunos com mensalidade atrasada";   
             break;
             case "5": //relaçao de alunos e porcentagem de presença

@@ -1,6 +1,5 @@
-
 <?php
-    include ("conexao.php");
+    include ("../conexao.php");
     session_start();
     if (isset($_SESSION['usuario']) && isset($_SESSION['senha'])) {
         $usuario = $_SESSION['usuario'];
@@ -21,27 +20,31 @@
             <?php
         }
         if ($usuario == 'admin' && $senha == '123456') { 
-            ?>
-                <!DOCTYPE html>
-                <html lang="en">
-                <head>
-                    <meta charset="UTF-8">
-                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                    <title>Administrador</title>
-                </head>
-                <body>
-                    <h1>Bem vindo a zona de adminstrador</h1>
-                    <h2>Segue a baixo o menu de cadastro e Relatórios</h2>
-                    <a href="pagesAdm/cadastro_turma.php">Criar turma</a><br>
-                    <a href="pagesAdm/cadastroAluno.php">Cadastrar aluno</a><br>
-                    <a href="pagesAdm/cadastroProfessor.php">Cadastrar professor</a><br>
-                    <a href="pagesAdm/relatoriosAdm.php">Relatórios</a><br>
-                    <a href="pagesAdm/mensalidades.php">Mensalidades</a><br>
-                    <a href="common.php">Voltar</a><br>
-                    <a href="logout.php">Sair</a>
-                </body>
-                </html>
-            <?php
+            $idMensalidade = $_POST['mensalidade'];
+            $sql = "UPDATE mensalidades SET status = 'pago' WHERE id = $idMensalidade;";
+            $result = mysqli_query($conexao, $sql); 
+            if ($result) {
+                echo "Mensalidade atualizada com sucesso!";
+                ?>
+                    <head>
+                        <meta charset="UTF-8">
+                        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                        <meta http-equiv = "refresh" content = "2; url = baixaMensalidade.php">
+                        <title>Mensalidade Atualizada</title>
+                    </head>
+                <?php
+            } else {
+                echo "Falha ao atualizar mensalidade";
+                ?>
+                    <head>
+                        <meta charset="UTF-8">
+                        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                        <meta http-equiv = "refresh" content = "2; url = baixaMensalidade.php">
+                        <title>Falha ao Atualizar</title>
+                    </head>
+                <?php
+            }
+
         } else {
             ?>
                 <head>
@@ -65,4 +68,3 @@
         <?php
     }
 ?>
-

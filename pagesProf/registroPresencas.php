@@ -56,9 +56,11 @@ $resultado = mysqli_query($conexao, $SQL);
         $SQL = "SELECT id, nome FROM alunos WHERE turma_id = $turma_id";
         $resultado = mysqli_query($conexao, $SQL);
 
-        if (mysqli_num_rows($resultado) > 0) { ?>
+        if (mysqli_num_rows($resultado) > 0) { 
+            $now = date("Y-m-d");
+            ?>
             <form action="salvar_presenca.php" method="POST">
-                <input type="date" name="dataAula">
+                <input type="date" name="dataAula" min="2022-01-01" max="<?= $now ?>">
                 <input type="hidden" name="turma_id" value="<?= $turma_id ?>">
                 <table>
                     <tr>

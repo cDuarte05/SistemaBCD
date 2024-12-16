@@ -1,6 +1,5 @@
-
 <?php
-    include ("conexao.php");
+    include ("../conexao.php");
     session_start();
     if (isset($_SESSION['usuario']) && isset($_SESSION['senha'])) {
         $usuario = $_SESSION['usuario'];
@@ -22,26 +21,25 @@
         }
         if ($usuario == 'admin' && $senha == '123456') { 
             ?>
-                <!DOCTYPE html>
-                <html lang="en">
-                <head>
-                    <meta charset="UTF-8">
-                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                    <title>Administrador</title>
-                </head>
-                <body>
-                    <h1>Bem vindo a zona de adminstrador</h1>
-                    <h2>Segue a baixo o menu de cadastro e Relatórios</h2>
-                    <a href="pagesAdm/cadastro_turma.php">Criar turma</a><br>
-                    <a href="pagesAdm/cadastroAluno.php">Cadastrar aluno</a><br>
-                    <a href="pagesAdm/cadastroProfessor.php">Cadastrar professor</a><br>
-                    <a href="pagesAdm/relatoriosAdm.php">Relatórios</a><br>
-                    <a href="pagesAdm/mensalidades.php">Mensalidades</a><br>
-                    <a href="common.php">Voltar</a><br>
-                    <a href="logout.php">Sair</a>
-                </body>
-                </html>
-            <?php
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Document</title>
+    
+    </head>
+    <body>
+        <h2>Gerenciar Mensalidades</h2>
+        <a href="adicionarMensalidade.php">Adicionar Mensalidade</a><br>
+        <a href="baixaMensalidade.php">Dar Baixa Em Mensalidade</a><br>
+        <a href="todasMensalidades.php">Ver Todas Mensalidades</a>
+        <br><a href="../dashbord_adm.php">Voltar para o menu</a>
+    </body>
+</html>
+
+<?php
         } else {
             ?>
                 <head>
@@ -65,4 +63,3 @@
         <?php
     }
 ?>
-

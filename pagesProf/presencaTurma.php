@@ -70,7 +70,6 @@ if (isset($_SESSION['usuario']) && isset($_SESSION['senha'])) {
                         order by Frequencia";
                         $resultado = mysqli_query($conexao, $SQL);
                         if(mysqli_num_rows($resultado) > 0){
-
                             while ($row = mysqli_fetch_assoc($resultado)){
                                 echo "<tr><td>" . $row['id'] . "</td><td>" . $row['nome'] . "</td><td>" . $row['Frequencia'] . "%</td></tr>";
                             }
@@ -84,6 +83,23 @@ if (isset($_SESSION['usuario']) && isset($_SESSION['senha'])) {
                 echo "Nenhum aluno/turma registrado para esse professor.<br>";
             }
         ?>
+            <br><form action="justificarAusencia.php" method="POST">
+                <select name="aluno">
+                    <?php
+                    for ($i = 0; $i < sizeof($idAlunos); $i++) {
+                        $SQL = "SELECT nome, id FROM alunos WHERE id = $idAlunos[$i]";
+                        $resultado = mysqli_query($conexao, $SQL);
+                        if(mysqli_num_rows($resultado) > 0){
+                            while ($row = mysqli_fetch_assoc($resultado)){
+                                echo "<option value='{$row['id']}'>" . $row['id'] . " - " . $row['nome'] . "</option>";
+                            }
+                        }else echo "Não há alunos registrados";
+                    }
+                    
+                    ?>
+                </select>
+                <input type="submit" value="Justificar Ausências">
+            </form>
             <a href="../dashbord_prof.php">Voltar ao menu</a>
     </body>
 </html>
@@ -99,6 +115,5 @@ if (isset($_SESSION['usuario']) && isset($_SESSION['senha'])) {
             <p>Login inválido para acessar essa página</p>
         </head>
     <?php
-
 }
 ?>

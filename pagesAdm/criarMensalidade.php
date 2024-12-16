@@ -1,6 +1,5 @@
-
 <?php
-    include ("conexao.php");
+    include ("../conexao.php");
     session_start();
     if (isset($_SESSION['usuario']) && isset($_SESSION['senha'])) {
         $usuario = $_SESSION['usuario'];
@@ -20,29 +19,35 @@
                 </head>
             <?php
         }
-        if ($usuario == 'admin' && $senha == '123456') { 
-            ?>
-                <!DOCTYPE html>
-                <html lang="en">
-                <head>
-                    <meta charset="UTF-8">
-                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                    <title>Administrador</title>
-                </head>
-                <body>
-                    <h1>Bem vindo a zona de adminstrador</h1>
-                    <h2>Segue a baixo o menu de cadastro e Relatórios</h2>
-                    <a href="pagesAdm/cadastro_turma.php">Criar turma</a><br>
-                    <a href="pagesAdm/cadastroAluno.php">Cadastrar aluno</a><br>
-                    <a href="pagesAdm/cadastroProfessor.php">Cadastrar professor</a><br>
-                    <a href="pagesAdm/relatoriosAdm.php">Relatórios</a><br>
-                    <a href="pagesAdm/mensalidades.php">Mensalidades</a><br>
-                    <a href="common.php">Voltar</a><br>
-                    <a href="logout.php">Sair</a>
-                </body>
-                </html>
-            <?php
-        } else {
+        if ($usuario == 'admin' && $senha == '123456') {
+            $idAluno = $_POST['aluno'];
+            $dataVencimento = $_POST['dataVencimento'];
+            $valor = $_POST['valor'];
+            $sql = "INSERT INTO mensalidades (aluno_id,valor,data_vencimento,status) VALUES
+            ($idAluno, $valor, '$dataVencimento', 'pendente')";
+            $result = mysqli_query($conexao, $sql); 
+            if ($result) {
+                echo "<br>Mensalidade criada com sucesso.";
+        ?>
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <meta http-equiv = "refresh" content = "3; url = adicionarMensalidade.php">
+            <title>Mensalidade Criada</title>
+        </head>
+        <?php
+    } else {
+        echo "<br>Falha ao criar mensalidade.";
+        ?>
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <meta http-equiv = "refresh" content = "3; url = adicionarMensalidade.php">
+            <title>Falha ao Criar mensalidade</title>
+        </head>
+        <?php
+    }
+} else {
             ?>
                 <head>
                     <meta charset="UTF-8">
@@ -65,4 +70,3 @@
         <?php
     }
 ?>
-
